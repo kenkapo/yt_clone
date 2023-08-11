@@ -1,67 +1,42 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Paper, IconButton } from "@mui/material";
-import { Search, Mic, MicOff } from "@mui/icons-material";
-import SpeechRecognition, {
-  useSpeechRecognition
-} from "react-speech-recognition";
+import { Paper, IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+
 const SearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const [micOn, setMicOn] = useState(true);
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  }
-  function submitSearch() {
+
+  const onhandleSubmit = (e) => {
+    e.preventDefault();
+
     if (searchTerm) {
       navigate(`/search/${searchTerm}`);
-      setSearchTerm("");
-    }
-  }
-  const {
-    transcript,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
 
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
+      setSearchTerm('');
+    }
+  };
 
-  function changeMic() {
-    setMicOn(!micOn);
-    console.log(transcript);
-    if(!micOn){
-      SpeechRecognition.startListening();
-    }
-    else
-    {
-      SpeechRecognition.stopListening();
-    }
-  }
   return (
     <Paper
-      components="form"
-      onSubmit={handleSubmit}
+      component='form'
+      onSubmit={onhandleSubmit}
       sx={{
         borderRadius: 20,
-        border: "1px solid #e3e3e3",
-        pl: 2, //padding left
-        boxShadow: "none",
-        mr: { sm: 5 }, //margin right
+        border: '1px solid #e3e3e3',
+        pl: 2,
+        boxShadow: 'none',
+        mr: { sm: 5 },
       }}
     >
       <input
-        className="search-bar"
-        placeholder="Search"
+        className='search-bar'
+        placeholder='Search...'
         value={searchTerm}
-        onChange={(event)=>setSearchTerm(event.target.value || transcript)}
-      ></input>
-      <IconButton type="submit" sx={{ p: "10px", color: "red" }} onClick={submitSearch}>
-        <Search></Search>
-      </IconButton>
-      <IconButton  sx={{ p: "10px", color: "red" }} onClick={changeMic}>
-        {micOn ? <Mic></Mic> :<MicOff></MicOff>}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <IconButton type='submit' sx={{ p: '10px', color: 'red' }} aria-label='search'>
+        <SearchIcon />
       </IconButton>
     </Paper>
   );
